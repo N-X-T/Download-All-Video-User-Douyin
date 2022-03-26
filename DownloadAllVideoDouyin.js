@@ -68,10 +68,12 @@ async function run(){
 		all_data.push(t[0]);
 		if(!t[1])break;
 	}
-	for(var i in all_data[0]){
-		try{
-			download(all_data[0][i]["src"], all_data[0][i]["id"], all_data[0][i]["desc"]);
-		}catch(e){}
+	for(var i in all_data){
+		for(var j in all_data[i]){
+			try{
+				download(all_data[i][j]["src"], all_data[i][j]["id"], all_data[i][j]["desc"]);
+			}catch(e){}
+		}
 	}
 }
 run();
