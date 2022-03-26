@@ -60,7 +60,7 @@ async function download(url, aweme_id, desc){
 	a.click();
 }
 async function run(){
-	var uid = window.location.href.replace("https://www.douyin.com/user/","");
+	var uid = [...window.location.href.matchAll(/https:\/\/www\.douyin\.com\/user\/([^?]+)/gm)][0][1];
 	var max_cursor = 0;
     var all_data = [];
 	while(1){
