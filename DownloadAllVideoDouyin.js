@@ -26,7 +26,7 @@ async function get_data(uid, max_cursor){
                 "desc": desc
             })
 		}
-		if(data_json["has_more"])
+		if(data_json["has_more"]||data_json["aweme_list"].length!=0)
 			return [data, data_json['max_cursor']];
 		 else return [data, 0];
 	} catch(e){}
@@ -65,8 +65,9 @@ async function run(){
     var all_data = [];
 	while(1){
 		var t =await get_data(uid, max_cursor);
+		max_cursor=t[1];
 		all_data.push(t[0]);
-		if(!t[1])break;
+		if(!max_cursor)break;
 	}
 	for(var i in all_data){
 		for(var j in all_data[i]){
