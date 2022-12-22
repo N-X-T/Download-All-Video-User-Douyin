@@ -1,6 +1,8 @@
 # How to use:
--Open URL of User, Ex: https://www.douyin.com/user/XXXXXXXXXXXXXXXXXXX
+-Open: https://www.iesdouyin.com/web/api/v2/aweme/post/
 
 -Open DevChrome(F12)
 
 -Paste to Console
+
+-Enter URL of User and Wait!
