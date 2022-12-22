@@ -5,4 +5,4 @@
 
 -Paste to Console
 
--Enter URL of User and Wait!
+-Appear prompt require link of user douyin, paste link, enter and wait!
