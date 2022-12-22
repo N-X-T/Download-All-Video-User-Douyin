@@ -16,7 +16,7 @@ async function get_data(uid, max_cursor){
 	try{
 		var aweme_list = data_json["aweme_list"];
 		for(var i in aweme_list){
-			src = aweme_list[i].video.play_addr.url_list[0].replace("http","https");
+			src = aweme_list[i].video.play_addr.url_list[0]/*.replace("http","https")*/;
 			//item["video"]["play_addr"]["url_list"][-1]
             desc = aweme_list[i].desc;
             aweme_id = aweme_list[i]["aweme_id"];
@@ -60,21 +60,25 @@ async function download(url, aweme_id, desc){
 	a.click();
 }
 async function run(){
-	var uid = [...window.location.href.matchAll(/https:\/\/www\.douyin\.com\/user\/([^?]+)/gm)][0][1];
+	var url=prompt("Link user:","");
+	var uid = [...url.matchAll(/https:\/\/www\.douyin\.com\/user\/([^?]+)/gm)][0][1];
 	var max_cursor = 0;
     var all_data = [];
-	while(1){
+	var spam=setInterval(async function(){
 		var t =await get_data(uid, max_cursor);
 		max_cursor=t[1];
 		all_data.push(t[0]);
-		if(!max_cursor)break;
-	}
-	for(var i in all_data){
-		for(var j in all_data[i]){
-			try{
-				download(all_data[i][j]["src"], all_data[i][j]["id"], all_data[i][j]["desc"]);
-			}catch(e){}
+		if(!max_cursor){
+			console.log(all_data);
+			for(var i in all_data){
+				for(var j in all_data[i]){
+					try{
+						download(all_data[i][j]["src"], all_data[i][j]["id"], all_data[i][j]["desc"]);
+					}catch(e){}
+				}
+			}
+			clearInterval(spam);
 		}
-	}
+	},1000);
 }
 run();
