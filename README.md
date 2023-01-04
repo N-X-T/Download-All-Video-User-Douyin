@@ -3,4 +3,4 @@
 
 -Open DevChrome(F12)
 
--Paste to console and wait!
+-Paste code to console and wait!
