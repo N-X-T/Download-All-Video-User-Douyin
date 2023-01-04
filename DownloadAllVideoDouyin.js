@@ -1,38 +1,27 @@
-async function API_CALL(max_cursor, uid){
-	var API_ENDPOINT = "https://www.iesdouyin.com/web/api/v2/aweme/post/?sec_uid="+uid+"&count=10&max_cursor="+max_cursor;
-	var data=await fetch(API_ENDPOINT, {
-						  "headers": {
-								'accept': 'application/json',
-								'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)'
-							},
-						  "method": "GET"
-						});
-	data=await data.json();
-	return data;
+var getid=async function(sec_user_id,max_cursor){
+	var res=await fetch("https://www.douyin.com/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id="+sec_user_id+"&max_cursor="+max_cursor, {
+	  "headers": {
+		"accept": "application/json, text/plain, */*",
+		"accept-language": "vi",
+		"sec-ch-ua": "\"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"108\", \"Microsoft Edge\";v=\"108\"",
+		"sec-ch-ua-mobile": "?0",
+		"sec-ch-ua-platform": "\"Windows\"",
+		"sec-fetch-dest": "empty",
+		"sec-fetch-mode": "cors",
+		"sec-fetch-site": "same-origin"
+	  },
+	  "referrer": "https://www.douyin.com/user/MS4wLjABAAAA5A-hCBCTdv102baOvaoZqg7nCIW_Bn_YBA0Aiz9uYPY",
+	  "referrerPolicy": "strict-origin-when-cross-origin",
+	  "body": null,
+	  "method": "GET",
+	  "mode": "cors",
+	  "credentials": "include"
+	});
+	res=await res.json();
+	return res;
 }
-async function get_data(uid, max_cursor){
-	var data=[];
-    var data_json = await API_CALL(max_cursor, uid);
-	try{
-		var aweme_list = data_json["aweme_list"];
-		for(var i in aweme_list){
-			src = aweme_list[i].video.play_addr.url_list[0]/*.replace("http","https")*/;
-			//item["video"]["play_addr"]["url_list"][-1]
-            desc = aweme_list[i].desc;
-            aweme_id = aweme_list[i]["aweme_id"];
-            data.push({
-                "id": aweme_id,
-                "src": src,
-                "desc": desc
-            })
-		}
-		if(data_json["has_more"]||data_json["aweme_list"].length!=0)
-			return [data, data_json['max_cursor']];
-		 else return [data, 0];
-	} catch(e){}
-	
-}
-async function download(url, aweme_id, desc){
+
+var download=async function(url, aweme_id, desc){
 	var file_name = aweme_id + "-" + desc + ".mp4";
 	var data=await fetch(url, {
   "headers": {
@@ -59,26 +48,28 @@ async function download(url, aweme_id, desc){
 	a.download = file_name;
 	a.click();
 }
-async function run(){
-	var url=prompt("Link user:","");
-	var uid = [...url.matchAll(/https:\/\/www\.douyin\.com\/user\/([^?]+)/gm)][0][1];
-	var max_cursor = 0;
-    var all_data = [];
-	var spam=setInterval(async function(){
-		var t =await get_data(uid, max_cursor);
-		max_cursor=t[1];
-		all_data.push(t[0]);
-		if(!max_cursor){
-			console.log(all_data);
-			for(var i in all_data){
-				for(var j in all_data[i]){
-					try{
-						download(all_data[i][j]["src"], all_data[i][j]["id"], all_data[i][j]["desc"]);
-					}catch(e){}
-				}
-			}
-			clearInterval(spam);
+
+var run=async function(){
+	var first=JSON.parse(decodeURIComponent(document.getElementById("RENDER_DATA").textContent));
+	var data=first['38']['post']['data'];
+	var result=[];
+	for(var i in data){
+		result.push(["http:"+data[i]['video']['playAddr'][0]['src'],data[i]['awemeId'],data[i]['desc']]);
+	}
+	var hasMore=first['38']['post']['hasMore'];
+	var sec_user_id=first['38']['user']['user']['secUid'];
+	var max_cursor=first['38']['post']['maxCursor'];
+	while(hasMore==1){
+		var moredata=await getid(sec_user_id,max_cursor);
+		hasMore=moredata['has_more'];
+		max_cursor=moredata['max_cursor'];
+		for(var i in moredata['aweme_list']){
+			result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0],moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
 		}
-	},1000);
+	}
+	for(var i in result){
+		download(result[i][0],result[i][1],result[i][2]);
+	}
+	//console.log(result);
 }
 run();
