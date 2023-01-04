@@ -28,11 +28,11 @@ var download=async function(url, aweme_id, desc){
     "accept": "*/*",
     "accept-language": "vi,en-US;q=0.9,en;q=0.8",
     "range": "bytes=0-",
-    "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Microsoft Edge\";v=\"99\"",
+    "sec-ch-ua": "\"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"108\", \"Microsoft Edge\";v=\"108\"",
     "sec-ch-ua-mobile": "?0",
     "sec-ch-ua-platform": "\"Windows\"",
     "sec-fetch-dest": "video",
-    "sec-fetch-mode": "no-cors",
+    "sec-fetch-mode": "cors",
     "sec-fetch-site": "cross-site"
   },
   "referrer": "https://www.douyin.com/",
@@ -54,7 +54,7 @@ var run=async function(){
 	var data=first['38']['post']['data'];
 	var result=[];
 	for(var i in data){
-		result.push(["http:"+data[i]['video']['playAddr'][0]['src'],data[i]['awemeId'],data[i]['desc']]);
+		result.push(["https:"+data[i]['video']['playAddr'][0]['src'],data[i]['awemeId'],data[i]['desc']]);
 	}
 	var hasMore=first['38']['post']['hasMore'];
 	var sec_user_id=first['38']['user']['user']['secUid'];
@@ -64,7 +64,7 @@ var run=async function(){
 		hasMore=moredata['has_more'];
 		max_cursor=moredata['max_cursor'];
 		for(var i in moredata['aweme_list']){
-			result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0],moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
+			result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0].replace("http","https"),moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
 		}
 	}
 	for(var i in result){
