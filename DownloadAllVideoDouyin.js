@@ -64,7 +64,10 @@ var run=async function(){
 		hasMore=moredata['has_more'];
 		max_cursor=moredata['max_cursor'];
 		for(var i in moredata['aweme_list']){
-			result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0].replace("http","https"),moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
+			if(moredata['aweme_list'][i]['video']['play_addr']['url_list'][0].startsWith("https"))
+				result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0],moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
+			else
+				result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0].replace("http","https"),moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
 		}
 	}
 	for(var i in result){
