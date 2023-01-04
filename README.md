@@ -1,8 +1,6 @@
 # How to use:
--Open: https://www.iesdouyin.com/web/api/v2/aweme/post/
+-Open link of user, example: https://www.douyin.com/user/MS4wLjABAAAA5A-hCBCTdv102baOvaoZqg7nCIW_Bn_YBA0Aiz9uYPY
 
 -Open DevChrome(F12)
 
--Paste to Console
-
--Appear prompt require link of user douyin, paste link, enter and wait!
+-Paste to console and wait!
