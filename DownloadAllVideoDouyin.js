@@ -68,7 +68,7 @@ var run=async function(){
 		}
 	}
 	for(var i in result){
-		download(result[i][0],result[i][1],result[i][2]);
+		try{download(result[i][0],result[i][1],result[i][2]);}catch{}
 	}
 	//console.log(result);
 }
