@@ -51,14 +51,14 @@ var download=async function(url, aweme_id, desc){
 
 var run=async function(){
 	var first=JSON.parse(decodeURIComponent(document.getElementById("RENDER_DATA").textContent));
-	var data=first['38']['post']['data'];
+	var data=first['37']['post']['data'];
 	var result=[];
 	for(var i in data){
 		result.push(["https:"+data[i]['video']['playAddr'][0]['src'],data[i]['awemeId'],data[i]['desc']]);
 	}
-	var hasMore=first['38']['post']['hasMore'];
-	var sec_user_id=first['38']['user']['user']['secUid'];
-	var max_cursor=first['38']['post']['maxCursor'];
+	var hasMore=first['37']['post']['hasMore'];
+	var sec_user_id=first['37']['user']['user']['secUid'];
+	var max_cursor=first['37']['post']['maxCursor'];
 	while(hasMore==1){
 		var moredata=await getid(sec_user_id,max_cursor);
 		hasMore=moredata['has_more'];
