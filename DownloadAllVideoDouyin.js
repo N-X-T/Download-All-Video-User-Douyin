@@ -49,6 +49,12 @@ var download=async function(url, aweme_id, desc){
 	a.click();
 }
 
+var waitforme=function(millisec) {
+    return new Promise(resolve => {
+        setTimeout(() => { resolve('') }, millisec);
+    })
+}
+
 var run=async function(){
 	var first=JSON.parse(decodeURIComponent(document.getElementById("RENDER_DATA").textContent));
 	var data=first['37']['post']['data'];
@@ -71,6 +77,7 @@ var run=async function(){
 		}
 	}
 	for(var i in result){
+		await waitforme(1000);
 		try{download(result[i][0],result[i][1],result[i][2]);}catch{}
 	}
 	//console.log(result);
