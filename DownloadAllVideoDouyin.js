@@ -57,29 +57,32 @@ var waitforme=function(millisec) {
 
 var run=async function(){
 	var first=JSON.parse(decodeURIComponent(document.getElementById("RENDER_DATA").textContent));
-	var data=first['37']['post']['data'];
-	var result=[];
-	for(var i in data){
-		result.push(["https:"+data[i]['video']['playAddr'][0]['src'],data[i]['awemeId'],data[i]['desc']]);
-	}
-	var hasMore=first['37']['post']['hasMore'];
-	var sec_user_id=first['37']['user']['user']['secUid'];
-	var max_cursor=first['37']['post']['maxCursor'];
-	while(hasMore==1){
-		var moredata=await getid(sec_user_id,max_cursor);
-		hasMore=moredata['has_more'];
-		max_cursor=moredata['max_cursor'];
-		for(var i in moredata['aweme_list']){
-			if(moredata['aweme_list'][i]['video']['play_addr']['url_list'][0].startsWith("https"))
-				result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0],moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
-			else
-				result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0].replace("http","https"),moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
+	for(var key in first)
+	    try{
+		var data=first[key]['post']['data'];
+		var result=[];
+		for(var i in data){
+			result.push(["https:"+data[i]['video']['playAddr'][0]['src'],data[i]['awemeId'],data[i]['desc']]);
 		}
-	}
-	for(var i in result){
-		await waitforme(1000);
-		try{download(result[i][0],result[i][1],result[i][2]);}catch{}
-	}
-	//console.log(result);
+		var hasMore=first[key]['post']['hasMore'];
+		var sec_user_id=first[key]['user']['user']['secUid'];
+		var max_cursor=first[key]['post']['maxCursor'];
+		while(hasMore==1){
+			var moredata=await getid(sec_user_id,max_cursor);
+			hasMore=moredata['has_more'];
+			max_cursor=moredata['max_cursor'];
+			for(var i in moredata['aweme_list']){
+				if(moredata['aweme_list'][i]['video']['play_addr']['url_list'][0].startsWith("https"))
+					result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0],moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
+				else
+					result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0].replace("http","https"),moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
+			}
+		}
+		for(var i in result){
+			await waitforme(1000);
+			try{download(result[i][0],result[i][1],result[i][2]);}catch{}
+		}
+		//console.log(result);
+	    }catch(){}
 }
 run();
