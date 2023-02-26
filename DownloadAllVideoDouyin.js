@@ -83,6 +83,8 @@ var run=async function(){
 			try{download(result[i][0],result[i][1],result[i][2]);}catch{}
 		}
 		//console.log(result);
-	    }catch(){}
+	    } catch (error){
+			console.log(error);
+		}
 }
 run();
