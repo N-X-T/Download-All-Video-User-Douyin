@@ -76,6 +76,8 @@ var run=async function(){
 					result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0],moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
 				else
 					result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0].replace("http","https"),moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
+				console.clear();
+				console.log("Number of videos: "+result.length);
 			}
 		}
 		for(var i in result){
