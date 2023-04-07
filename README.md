@@ -4,4 +4,8 @@
 
 -Open DevChrome(F12)
 
+-Set delay in milisecond at: "await waitforme(1000);"
+
 -Paste code to console and wait!
+
+-If have any bug, create Issues!
