@@ -17,7 +17,12 @@ var getid=async function(sec_user_id,max_cursor){
 	  "mode": "cors",
 	  "credentials": "include"
 	});
-	res=await res.json();
+	try{
+	    res=await res.json();
+	}catch(e){
+		res=await getid(sec_user_id,max_cursor);
+		console.log(e);
+	}
 	return res;
 }
 
@@ -85,6 +90,6 @@ var run=async function(){
 			try{download(result[i][0],result[i][1],result[i][2]);}catch{}
 		}
 		//console.log(result);
-	    }catch{}
+	    }catch(e){console.log(e);}
 }
 run();
