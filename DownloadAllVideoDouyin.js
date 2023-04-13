@@ -61,35 +61,35 @@ var waitforme=function(millisec) {
 }
 
 var run=async function(){
-	var first=JSON.parse(decodeURIComponent(document.getElementById("RENDER_DATA").textContent));
-	for(var key in first)
-	    try{
-		var data=first[key]['post']['data'];
-		var result=[];
-		for(var i in data){
-			result.push(["https:"+data[i]['video']['playAddr'][0]['src'],data[i]['awemeId'],data[i]['desc']]);
-		}
-		var hasMore=first[key]['post']['hasMore'];
-		var sec_user_id=first[key]['user']['user']['secUid'];
-		var max_cursor=first[key]['post']['maxCursor'];
-		while(hasMore==1){
-			var moredata=await getid(sec_user_id,max_cursor);
-			hasMore=moredata['has_more'];
-			max_cursor=moredata['max_cursor'];
-			for(var i in moredata['aweme_list']){
-				if(moredata['aweme_list'][i]['video']['play_addr']['url_list'][0].startsWith("https"))
-					result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0],moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
-				else
-					result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0].replace("http","https"),moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
-				console.clear();
-				console.log("Number of videos: "+result.length);
+	var result=[];
+	var hasMore=1;
+	var sec_user_id=location.pathname.replace("/user/","");
+	var max_cursor=0;
+	var download_from=prompt("Enter id video(Enter 0 if want to download all video):","");
+	if(download_from==null || download_from=="") {
+		alert("Please, Enter id of video!");
+		return;
+	}
+	while(hasMore==1){
+		var moredata=await getid(sec_user_id,max_cursor);
+		hasMore=moredata['has_more'];
+		max_cursor=moredata['max_cursor'];
+		for(var i in moredata['aweme_list']){
+			if(moredata['aweme_list'][i]['aweme_id'] == download_from){
+				hasMore=0;
+				break;
 			}
+			if(moredata['aweme_list'][i]['video']['play_addr']['url_list'][0].startsWith("https"))
+				result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0],moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
+			else
+				result.push([moredata['aweme_list'][i]['video']['play_addr']['url_list'][0].replace("http","https"),moredata['aweme_list'][i]['aweme_id'],moredata['aweme_list'][i]['desc']]);
+			console.clear();
+			console.log("Number of videos: "+result.length);
 		}
-		for(var i in result){
-			await waitforme(1000);
-			try{download(result[i][0],result[i][1],result[i][2]);}catch{}
-		}
-		//console.log(result);
-	    }catch(e){console.log(e);}
+	}
+	for(var i=result.length-1;i>=0;i--){
+		await waitforme(1000);
+		try{download(result[i][0],result[i][1],result[i][2]);}catch{}
+	}
 }
 run();
