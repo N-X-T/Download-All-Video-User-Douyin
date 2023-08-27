@@ -1,3 +1,4 @@
+# Don't support download video make from image -> only download music
 # New Feature - Only Download New Video:
 -The name of the downloaded video is of the form: id-description.mp4 (lastest video is downloaded is newest video in douyin)
 
