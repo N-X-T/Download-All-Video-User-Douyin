@@ -1,3 +1,9 @@
+var waitforme=function(millisec) {
+    return new Promise(resolve => {
+        setTimeout(() => { resolve('') }, millisec);
+    })
+}
+
 var getid=async function(sec_user_id,max_cursor){
 	var res=await fetch("https://www.douyin.com/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id="+sec_user_id+"&max_cursor="+max_cursor, {
 	  "headers": {
@@ -20,6 +26,7 @@ var getid=async function(sec_user_id,max_cursor){
 	try{
 	    res=await res.json();
 	}catch(e){
+		await waitforme(1000);
 		res=await getid(sec_user_id,max_cursor);
 		console.log(e);
 	}
@@ -52,12 +59,6 @@ var download=async function(url, aweme_id, desc){
 	a.href = window.URL.createObjectURL(data);
 	a.download = file_name;
 	a.click();
-}
-
-var waitforme=function(millisec) {
-    return new Promise(resolve => {
-        setTimeout(() => { resolve('') }, millisec);
-    })
 }
 
 var run=async function(){
