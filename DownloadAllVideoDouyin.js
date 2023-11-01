@@ -88,14 +88,14 @@ var run=async function(){
 			console.log("Number of videos: "+result.length);
 		}
 		if(result.length>100){
-			for(var i=result.length-1;i>=0;i--){
+			for(var i=0;i<result.length;i++){
 				await waitforme(1000);
 				try{download(max_cursor,result[i][0],result[i][1],result[i][2]);}catch{}
 			}
 			result = [];
 		}
 	}
-	for(var i=result.length-1;i>=0;i--){
+	for(var i=0;i<result.length;i++){
 		await waitforme(1000);
 		try{download(max_cursor, result[i][0],result[i][1],result[i][2]);}catch{}
 	}
