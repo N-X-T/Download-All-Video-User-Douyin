@@ -33,8 +33,8 @@ var getid=async function(sec_user_id,max_cursor){
 	return res;
 }
 
-var download=async function(url, aweme_id, desc){
-	var file_name = aweme_id + "-" + desc + ".mp4";
+var download=async function(max_cursor, url, aweme_id, desc){
+	var file_name = max_cursor + "-" + aweme_id + "-" + desc + ".mp4";
 	var data=await fetch(url, {
   "headers": {
     "accept": "*/*",
@@ -65,10 +65,10 @@ var run=async function(){
 	var result=[];
 	var hasMore=1;
 	var sec_user_id=location.pathname.replace("/user/","");
-	var max_cursor=0;
+	var max_cursor=prompt("Enter max_cursor(Enter 0 if want to download all video):","");
 	var download_from=prompt("Enter id video(Enter 0 if want to download all video):","");
-	if(download_from==null || download_from=="") {
-		alert("Please, Enter id of video!");
+	if(download_from==null || download_from=="" || max_cursor==null || max_cursor=="") {
+		alert("Please, Enter id and max_cursor of video!");
 		return;
 	}
 	while(hasMore==1){
@@ -87,10 +87,17 @@ var run=async function(){
 			console.clear();
 			console.log("Number of videos: "+result.length);
 		}
+		if(result.length>100){
+			for(var i=result.length-1;i>=0;i--){
+				await waitforme(1000);
+				try{download(max_cursor,result[i][0],result[i][1],result[i][2]);}catch{}
+			}
+			result = [];
+		}
 	}
 	for(var i=result.length-1;i>=0;i--){
 		await waitforme(1000);
-		try{download(result[i][0],result[i][1],result[i][2]);}catch{}
+		try{download(max_cursor, result[i][0],result[i][1],result[i][2]);}catch{}
 	}
 }
 run();
